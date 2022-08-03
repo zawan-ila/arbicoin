@@ -1,7 +1,10 @@
 from django.urls import path
 
-from .views import TransactionViewApi
+from .views import TransactionHashView, TransactionViewApi, UnconfirmedTransactionView
 
 urlpatterns = [
-    path('<int:pk>/', TransactionViewApi.as_view())
+    path('unconfirmed/', UnconfirmedTransactionView.as_view()),
+
+    path('<str:hash>/', TransactionHashView.as_view()),
+
 ]

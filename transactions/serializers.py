@@ -1,20 +1,26 @@
 from rest_framework import serializers
-from .models import TxIn, TxOut, Transaction
+from .models import TxIn, TxOut, Transaction, AbstractTransactionComponent
 
 
-class TxOutModelSerializer(serializers.ModelSerializer):
-
+class AbstractTransactionComponentModelSerializer(serializers.ModelSerializer):
+    
     class Meta:
-        model = TxOut
+        model = AbstractTransactionComponent
         fields = ['value', 'own_addr']
 
 
-class TxInModelSerializer(serializers.ModelSerializer):
+class TxOutModelSerializer(AbstractTransactionComponentModelSerializer):
+
+    class Meta(AbstractTransactionComponentModelSerializer.Meta):
+        model = TxOut
+
+
+class TxInModelSerializer(AbstractTransactionComponentModelSerializer):
     gen_tx_id = serializers.CharField(source='gen_tx.hash')
 
-    class Meta:
+    class Meta(AbstractTransactionComponentModelSerializer.Meta):
         model = TxIn
-        fields = ['value', 'own_addr', 'gen_tx_id', 'gen_tx_idx', 'signature']
+        fields = AbstractTransactionComponentModelSerializer.Meta.fields + ['gen_tx_id', 'gen_tx_idx', 'signature']
 
 
 class TransactionModelSerializer(serializers.ModelSerializer):

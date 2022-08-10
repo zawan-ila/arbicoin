@@ -1,7 +1,5 @@
 from django.db import models
 
-# Create your models here.
-
 
 class Block(models.Model):
     '''
@@ -13,7 +11,7 @@ class Block(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True, editable=False)
     height = models.PositiveIntegerField()
     num_transactions = models.PositiveIntegerField()
-    hash_target_zeros = models.PositiveIntegerField()
+    hash_target_zeros = models.PositiveIntegerField(help_text='difficulty of mining the block', default=0)
     nonce = models.TextField(editable=False)
 
     def __str__(self) -> str:

@@ -1,6 +1,5 @@
 from django.contrib import admin
+from blocks.models import Block
 
-# Register your models here.
 
-from .models import Block
 admin.site.register(Block)

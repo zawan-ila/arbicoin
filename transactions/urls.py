@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import TransactionViewApi
+from transactions.views import TransactionViewApi
 
 urlpatterns = [
     path('<int:pk>/', TransactionViewApi.as_view())

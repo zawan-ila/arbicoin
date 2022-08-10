@@ -1,12 +1,6 @@
-from django.shortcuts import render
-
-# Create your views here.
-from rest_framework.response import Response
-
 from rest_framework import generics
-
-from .models import Transaction
-from .serializers import TransactionModelSerializer
+from transactions.models import Transaction
+from transactions.serializers import TransactionModelSerializer
 
 
 class TransactionViewApi(generics.RetrieveAPIView):

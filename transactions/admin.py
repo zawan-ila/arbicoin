@@ -1,9 +1,7 @@
 from django.contrib import admin
+from transactions.models import Transaction, TransactionOutput, TransactionInput
 
-# Register your models here.
-
-from .models import Transaction, TxIn, TxOut
 
 admin.site.register(Transaction)
-admin.site.register(TxIn)
-admin.site.register(TxOut)
+admin.site.register(TransactionInput)
+admin.site.register(TransactionOutput)

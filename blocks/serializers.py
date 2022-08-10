@@ -1,8 +1,6 @@
-
 from rest_framework import serializers
-
+from blocks.models import Block
 from transactions.serializers import TransactionModelSerializer
-from .models import Block
 
 
 class BlockModelSerializer(serializers.ModelSerializer):

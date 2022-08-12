@@ -21,5 +21,4 @@ urlpatterns = [
     path('transactions/', include('transactions.urls')),
     path('blocks/', include('blocks.urls')),
     
-
 ]

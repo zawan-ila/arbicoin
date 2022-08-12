@@ -7,7 +7,7 @@ class Transaction(models.Model):
     This represents a transaction(exchange of coins) on the blockchain
     '''
 
-    hash = models.CharField(help_text='hash of the transaction for identification',max_length=40, editable=False, blank=True, null=True)
+    hash = models.CharField(help_text='hash of the transaction for identification',max_length=40, blank=True, null=True)
     block = models.ForeignKey(Block, help_text='block this transaction is part of', blank=True, null=True, on_delete=models.CASCADE, related_name='transactions')
     tx_inputs_count = models.PositiveIntegerField(blank=True, default=0, help_text='number of inputs in the transaction')
     tx_outputs_count = models.PositiveIntegerField(blank=True, default=0, help_text='number of outputs in the transaction')
@@ -24,7 +24,7 @@ class AbstractTransactionComponent(models.Model):
     of transaction inputs and transaction outputs
     '''
 
-    hash = models.CharField(max_length=40, editable=False, blank=True, null=True, help_text='hash of the transaction component')
+    hash = models.CharField(max_length=40, blank=True, null=True, help_text='hash of the transaction component')
     value = models.PositiveIntegerField(default=0, help_text='value of the component i.e how much is it worth')
     own_addr = models.CharField(max_length=100, help_text='owner of this component')
     gen_transaction_index = models.PositiveIntegerField(blank=True, null=True, help_text='output index in generating transaction')

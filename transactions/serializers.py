@@ -46,16 +46,24 @@ class TransactionModelSerializer(serializers.ModelSerializer):
         Take a serialized instance of TransactionInputModel, check if it is valid(exists) and 
         return its hash
         '''
-        v = input["value"]
-        a = input["own_addr"]
-        g = input["gen_transaction"]["hash"]
-        i = input["gen_transaction_index"]
 
-        match_utxos = TransactionOutput.objects.filter(value=v, own_addr=a, gen_transaction__hash=g, gen_transaction_index=i)
+        # value(worth) of the input
+        val = input["value"]
+        # address to which the input belongs
+        addr = input["own_addr"]
+        # hash of the transaction in which this input was created
+        gen_tx_hash = input["gen_transaction"]["hash"]
+        # index among the outputs of the generating transaction
+        idx = input["gen_transaction_index"]
+
+        # Check if the input above is valid i.e it exists in the database as a TransactionOutput
+        match_utxos = TransactionOutput.objects.filter(value=val, own_addr=addr, gen_transaction__hash=gen_tx_hash, gen_transaction_index=idx)
+        # if a matching output does not exist or it exists but is not mined yet, raise an error
         if not match_utxos or not match_utxos.first().gen_transaction.mined:
             raise ValidationError("Referenced input(s) do not exist")
 
-        return hashlib.sha1((str(v)+a+g+str(i)).encode()).hexdigest()
+        # Now that the input is valid(no error was raised) we return its hash
+        return hashlib.sha1((str(val)+addr+gen_tx_hash+str(idx)).encode()).hexdigest()
 
     def sign_status(self, msg, pk, sign):
         '''
@@ -143,7 +151,6 @@ class TransactionModelSerializer(serializers.ModelSerializer):
         t = Transaction.objects.create(hash=validated_data['tx_hash'], tx_inputs_count=validated_data['tx_inputs_count'], tx_outputs_count=validated_data['tx_outputs_count'])
 
         for idx in range(len(inputs)):
-
             i = inputs[idx]
             gen_tx = Transaction.objects.filter(hash=i['gen_transaction']['hash']).first()
             TransactionInput.objects.create(value=i['value'], own_addr=i['own_addr'], gen_transaction=gen_tx, gen_transaction_index=i['gen_transaction_index'], spend_transaction_index=idx, spend_transaction=t, signature=i['signature'], hash=i['hash'])

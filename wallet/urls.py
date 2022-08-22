@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import TransactionCreateApiView, WalletInfoView, UnspentOutputsView
+from wallet.views import TransactionCreateApiView, WalletInfoView, UnspentOutputsView
 
 
 urlpatterns = [

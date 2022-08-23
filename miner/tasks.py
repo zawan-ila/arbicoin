@@ -1,12 +1,12 @@
-import os
-import time
 import hashlib
 import math
+import os
+import time
 from functools import reduce
 from celery import signals
+from blocks.models import Block
 from transactions.models import Transaction
 from transactions.models import TransactionOutput
-from blocks.models import Block
 
 
 def gen_reward_transaction(val, blk_h):
@@ -26,6 +26,11 @@ def gen_reward_transaction(val, blk_h):
 
 @signals.worker_ready.connect
 def mine(**kwargs):
+    '''
+    When a celery worker is ready to accept work, the worker_ready signal is
+    emitted. Upon receiving this signal, we start mining
+    '''
+
     while True:
         print('Trying a block')
         unconfirmed_tx = Transaction.objects.filter(mined=False)
@@ -75,7 +80,10 @@ def mine(**kwargs):
 
                 if hash_with_nonce.startswith('0'*difficulty):
                     print("Wooho...Block mined")
-                    blk = Block.objects.create(hash=hash_with_nonce, merkle_hash=merkle_hash, prev_block=prev_blk, height=block_idx, num_transactions=num_transactions, hash_target_zeros=difficulty, nonce=str(nonce))
+                    blk = Block.objects.create(hash=hash_with_nonce, merkle_hash=merkle_hash,
+                                               prev_block=prev_blk, height=block_idx, 
+                                               num_transactions=num_transactions,
+                                               hash_target_zeros=difficulty, nonce=str(nonce))
                     for tx in unconfirmed_tx:
                         tx.block = blk
                         tx.mined = True

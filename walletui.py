@@ -1,5 +1,6 @@
 import ecdsa
 import hashlib
+import os
 import requests
 from functools import reduce
 
@@ -18,7 +19,7 @@ def gen_key_pairs(n):
 
 
 def main():
-    host = "http://127.0.0.1:8000/"
+    host = os.environ.get('ROOT_URL', "http://127.0.0.1:8000/")
 
     priv_keys = []
     priv_key = input("Please enter your private keys. Enter an empty line when you are done. \n")
@@ -29,7 +30,7 @@ def main():
         else:
             priv_keys.append(priv_key)
             priv_key = input()
-    
+
     pub_keys = list(map(lambda pk: ecdsa.SigningKey.from_string(bytes.fromhex(pk)).verifying_key.to_string().hex(),priv_keys))
     receivers = []
 

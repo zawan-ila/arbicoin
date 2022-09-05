@@ -1,4 +1,3 @@
-import sys
 import hashlib
 from functools import reduce
 from rest_framework.exceptions import ValidationError
@@ -36,10 +35,12 @@ class TransactionModelSerializer(serializers.ModelSerializer):
     inputs = TransactionInputModelSerializer(many=True)
     outputs = TransactionOutputModelSerializer(many=True)
     block_hash = serializers.ReadOnlyField(source='block.hash')
+    block_num = serializers.ReadOnlyField(source='block.height')
+
 
     class Meta:
         model = Transaction
-        fields = ['hash', 'block_hash', 'tx_inputs_count', 'tx_outputs_count', 'inputs', 'outputs']
+        fields = ['hash', 'block_hash', 'block_num', 'tx_inputs_count', 'tx_outputs_count', 'inputs', 'outputs']
 
     def validate_input(self, input):
         '''

@@ -20,6 +20,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('transactions/', include('transactions.urls')),
     path('blocks/', include('blocks.urls')),
-    
+    path('wallet/', include('wallet.urls')),
 
 ]

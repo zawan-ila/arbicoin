@@ -14,5 +14,8 @@ class Block(models.Model):
     hash_target_zeros = models.PositiveIntegerField(help_text='difficulty of mining the block', default=0)
     nonce = models.TextField()
 
+    class Meta:
+        ordering = ['-timestamp']
+
     def __str__(self) -> str:
         return f"block hash {self.hash} with {self.num_transactions} transactions inside"

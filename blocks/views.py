@@ -59,3 +59,4 @@ class BlockHeightView(generics.RetrieveAPIView):
     queryset = Block.objects.all()
     serializer_class = BlockModelSerializer
     lookup_field = 'height'
+    permission_classes = [permissions.IsAuthenticated]

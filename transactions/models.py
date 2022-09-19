@@ -38,7 +38,7 @@ class TransactionInput(AbstractTransactionComponent):
     This represents the inputs to a transactions. Inputs are coins that
     are spent in a transaction (i.e sent to somebody else)
     '''
-    gen_transaction = models.ForeignKey(Transaction, blank=True, null=True, on_delete=models.CASCADE, help_text='transaction that generated this input')
+    gen_transaction = models.ForeignKey(Transaction, blank=True, null=True, related_name='used_outputs', on_delete=models.CASCADE, help_text='transaction that generated this input')
     spend_transaction = models.ForeignKey(Transaction, blank=True, null=True, on_delete=models.CASCADE, related_name='inputs', help_text='transcation that spent this input')
     spend_transaction_index = models.PositiveIntegerField(default=0, help_text='input index in spending transaction')
     signature = models.TextField(help_text='digital signature for verification')
@@ -61,4 +61,3 @@ class TransactionOutput(AbstractTransactionComponent):
             return f"gen in {self.gen_transaction.hash} value {self.value} owner {self.own_addr}"
         else:
             return f"output: value {self.value} owner {self.own_addr}"
-

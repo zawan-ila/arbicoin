@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from blocks.serializers import BlockModelSerializer
 from blocks.models import Block
+from rest_framework import permissions
 
 
 class BlockHashView(generics.RetrieveAPIView):
@@ -24,6 +25,7 @@ class ChainLengthView(APIView):
     '''
     queryset = Block.objects.all()
     serializer_class = BlockModelSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         len = self.queryset.count()
@@ -47,11 +49,13 @@ class AllBlocksView(generics.ListAPIView):
     '''
     queryset = Block.objects.all()
     serializer_class = BlockModelSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 
-class BlockIdView(generics.RetrieveAPIView):
+class BlockHeightView(generics.RetrieveAPIView):
     '''
-    Get a block based on its pk
+    Get a block based on its index/height
     '''
     queryset = Block.objects.all()
     serializer_class = BlockModelSerializer
+    lookup_field = 'height'

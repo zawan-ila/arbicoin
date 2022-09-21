@@ -8,6 +8,12 @@ from transactions.models import TransactionOutput
 
 def create_simple_raw_transaction(priv_key, rcvr_key, amount):
 
+    try:
+        int(rcvr_key, 16)
+        ecdsa.VerifyingKey.from_string(bytes.fromhex(rcvr_key))
+    except (ecdsa.MalformedPointError, ValueError):
+        return 'Receiver Address does not exist'
+
     priv_keys = [priv_key]
 
     pub_keys = list(map(lambda pk: ecdsa.SigningKey.from_string(bytes.fromhex(pk)).verifying_key.to_string().hex(), priv_keys))
@@ -18,7 +24,7 @@ def create_simple_raw_transaction(priv_key, rcvr_key, amount):
     owned_utxos = []
 
     for pub_key in pub_keys:
-        qs = TransactionOutput.objects.filter(own_addr=pub_key) #.filter(gen_transaction__mined=True)
+        qs = TransactionOutput.objects.filter(own_addr=pub_key)
         owned_utxo = TransactionOutputModelSerializer(qs, many=True).data
         owned_utxos += [*owned_utxo]
 

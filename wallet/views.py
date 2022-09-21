@@ -36,7 +36,7 @@ def TransactionCreateApiView(request):
     raw_tx_content = create_simple_raw_transaction(request.user.privkey, receiver, amount)
 
     if (isinstance(raw_tx_content, str)):
-        return Response({"error": "Not enough coins available"})
+        return Response({"error": raw_tx_content})
 
     try:
         serializer = TransactionModelSerializer(data=raw_tx_content)
@@ -50,6 +50,8 @@ def TransactionCreateApiView(request):
 
 
 class WalletInfoView(generics.RetrieveAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         addr = kwargs['own_addr']
         transactions = Transaction.objects.all()
@@ -102,5 +104,5 @@ class WalletTransactionsView(generics.ListAPIView):
 class UnspentOutputsView(APIView):
 
     def get(self, request, own_addr):
-        qs = TransactionOutput.objects.filter(own_addr=own_addr) # filter(gen_transaction__mined=True)
+        qs = TransactionOutput.objects.filter(own_addr=own_addr)
         return Response(TransactionOutputModelSerializer(qs, many=True).data)

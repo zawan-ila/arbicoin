@@ -35,6 +35,6 @@ class TransactionsCountView(generics.RetrieveAPIView):
 
 
 class AllTransactionsView(generics.ListAPIView):
-    queryset = Transaction.objects.all()
+    queryset = Transaction.objects.order_by('-timestamp')
     serializer_class = TransactionModelSerializer
     pagination_class = MyPaginationClass

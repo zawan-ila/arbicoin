@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import models
 from blocks.models import Block
 
@@ -12,6 +13,7 @@ class Transaction(models.Model):
     tx_inputs_count = models.PositiveIntegerField(blank=True, default=0, help_text='number of inputs in the transaction')
     tx_outputs_count = models.PositiveIntegerField(blank=True, default=0, help_text='number of outputs in the transaction')
     mined = models.BooleanField(default=False, help_text='has the transaction been mined')
+    timestamp = models.DateTimeField(auto_now_add=True, editable=False)
 
     def __str__(self):
         block_info = self.block.hash if self.block else 'unmined'

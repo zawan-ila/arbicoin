@@ -18,7 +18,7 @@ def create_simple_raw_transaction(priv_key, rcvr_key, amount):
     owned_utxos = []
 
     for pub_key in pub_keys:
-        qs = TransactionOutput.objects.filter(own_addr=pub_key).filter(gen_transaction__mined=True)
+        qs = TransactionOutput.objects.filter(own_addr=pub_key) #.filter(gen_transaction__mined=True)
         owned_utxo = TransactionOutputModelSerializer(qs, many=True).data
         owned_utxos += [*owned_utxo]
 
@@ -66,3 +66,16 @@ def create_simple_raw_transaction(priv_key, rcvr_key, amount):
     to_post = {'inputs': utxos_to_spend, 'outputs': receivers, 'tx_inputs_count': len(utxos_to_spend), 'tx_outputs_count': len(receivers)}
 
     return to_post
+
+
+def owns(wallet_addr, tx):
+    for input in tx.inputs.all():
+        if input.own_addr == wallet_addr:
+            return True
+    for output in tx.outputs.all():
+        if output.own_addr == wallet_addr:
+            return True
+    for used_output in tx.used_outputs.all():
+        if used_output.own_addr == wallet_addr:
+            return True
+    return False

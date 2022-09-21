@@ -41,7 +41,7 @@ class TransactionModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Transaction
-        fields = ['hash', 'block_hash', 'block_num', 'tx_inputs_count', 'tx_outputs_count', 'inputs', 'outputs', 'used_outputs']
+        fields = ['hash', 'timestamp', 'block_hash', 'block_num', 'tx_inputs_count', 'tx_outputs_count', 'inputs', 'outputs', 'used_outputs']
 
     def validate_input(self, input):
         '''
@@ -61,7 +61,7 @@ class TransactionModelSerializer(serializers.ModelSerializer):
         # Check if the input above is valid i.e it exists in the database as a TransactionOutput
         match_utxos = TransactionOutput.objects.filter(value=val, own_addr=addr, gen_transaction__hash=gen_tx_hash, gen_transaction_index=idx)
         # if a matching output does not exist or it exists but is not mined yet, raise an error
-        if not match_utxos or not match_utxos.first().gen_transaction.mined:
+        if not match_utxos:
             raise ValidationError("Referenced input(s) do not exist")
 
         # Now that the input is valid(no error was raised) we return its hash

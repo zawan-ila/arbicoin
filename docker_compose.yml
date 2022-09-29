@@ -30,9 +30,9 @@ services:
     build:
       context: ../arbicoin-frontend
       args:
-        API_URL: http://localhost:8000/
+        API_URL: http://4.224.17.167:8000/
     ports:
-      - 3000:80
+      - 80:80
     depends_on:
       - backend
 

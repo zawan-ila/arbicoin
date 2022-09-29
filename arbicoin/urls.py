@@ -21,5 +21,5 @@ urlpatterns = [
     path('transactions/', include('transactions.urls')),
     path('blocks/', include('blocks.urls')),
     path('wallet/', include('wallet.urls')),
-    path('auth/', include('auth.urls')),
+    path('auth/', include('authorization.urls')),
 ]

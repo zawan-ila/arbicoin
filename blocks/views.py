@@ -8,6 +8,11 @@ from rest_framework.views import APIView
 from blocks.serializers import BlockModelSerializer
 from blocks.models import Block
 from rest_framework import permissions
+from rest_framework.pagination import PageNumberPagination
+
+
+class MyPaginationClass(PageNumberPagination):
+    page_size = 7
 
 
 class BlockHashView(generics.RetrieveAPIView):
@@ -25,7 +30,6 @@ class ChainLengthView(APIView):
     '''
     queryset = Block.objects.all()
     serializer_class = BlockModelSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         len = self.queryset.count()
@@ -49,7 +53,7 @@ class AllBlocksView(generics.ListAPIView):
     '''
     queryset = Block.objects.all()
     serializer_class = BlockModelSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    pagination_class = MyPaginationClass
 
 
 class BlockHeightView(generics.RetrieveAPIView):

@@ -3,6 +3,11 @@ from rest_framework.response import Response
 from blocks.models import Block
 from transactions.models import Transaction
 from transactions.serializers import TransactionModelSerializer
+from rest_framework.pagination import PageNumberPagination
+
+
+class MyPaginationClass(PageNumberPagination):
+    page_size = 7
 
 
 class TransactionHashView(generics.RetrieveAPIView):
@@ -29,9 +34,7 @@ class TransactionsCountView(generics.RetrieveAPIView):
         return Response({"length": count})
 
 
-class AllTransactionsView(generics.RetrieveAPIView):
-    queryset = Transaction.objects.filter(mined=True)
-
-    def get(self, request):
-        queryset = Transaction.objects.filter(mined=True)
-        return Response(TransactionModelSerializer(queryset, many=True).data)
+class AllTransactionsView(generics.ListAPIView):
+    queryset = Transaction.objects.order_by('-timestamp')
+    serializer_class = TransactionModelSerializer
+    pagination_class = MyPaginationClass

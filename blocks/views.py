@@ -51,9 +51,13 @@ class AllBlocksView(generics.ListAPIView):
     '''
     Get the whole blockchain i.e all the blocks 
     '''
-    queryset = Block.objects.all()
     serializer_class = BlockModelSerializer
     pagination_class = MyPaginationClass
+
+    def get_queryset(self):
+        prefix = self.request.query_params['prefix']
+        prefix_block_heights= [blk.height for blk in Block.objects.all() if prefix_match(prefix, blk)]
+        return Block.objects.filter(height__in=prefix_block_heights)
 
 
 class BlockHeightView(generics.RetrieveAPIView):
@@ -63,3 +67,8 @@ class BlockHeightView(generics.RetrieveAPIView):
     queryset = Block.objects.all()
     serializer_class = BlockModelSerializer
     lookup_field = 'height'
+
+
+def prefix_match(prefix, blk):
+    blk_str_id = str(blk.height)
+    return blk_str_id.startswith(prefix)
